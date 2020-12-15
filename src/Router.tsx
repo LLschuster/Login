@@ -20,14 +20,19 @@ function App() {
     .catch(() => setLogin(false))
   }, [])
 
+  // Allow pages in the navigation stack to change the login status
   const loginCallback = (value: boolean) => {
       setLogin(value)
   }
 
+  //Navigation structure
+  // one stack: divided into pages when the user is login (main)
+  // and pages where user is logout (register and login)
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {isLogin? <Stack.Screen name="Main">
+        {isLogin?
+        <Stack.Screen name="Main">
             {(props) => <Main handleLogin={loginCallback} {...props}/>}
         </Stack.Screen> 
         :

@@ -11,6 +11,7 @@ interface FormInputProps {
 }
 
 const _buildFeedbackIcon = (isValid?: boolean) : JSX.Element | undefined => {
+    //if user has not write anything dont check check for validity
     if (isValid === undefined) return;
      return (!isValid ? <Icon key={"closecircle"} type="AntDesign" name='closecircle' /> 
             : 

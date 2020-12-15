@@ -28,7 +28,6 @@ const Register = (props: RegisterProps) => {
 
     const validatePassword = (password: string) => {
        const passwordStrength = getPasswordStrengthRate(password);
-       console.log({passwordStrength})
        setIsPasswordValid(passwordStrength > 2);
        setPassword(password);
     }
@@ -60,7 +59,6 @@ const Register = (props: RegisterProps) => {
     }
 
     const handleGoToRegisterScreen = () => {
-        console.log(props)
         props.navigation.navigate("Register")
     }
   return (
