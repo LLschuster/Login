@@ -3,7 +3,7 @@ import {View, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import {Item, Form, Input, Label, Icon, Button, Text} from "native-base";
 import FormInput from '../components/FormInput';
 import { EMAIL_REGEX } from '../helpers/constants';
-import {saveCredentials, setCurrentUser, userCredential} from "../helpers/storage"
+import {loginUserWithCredentials, saveCredentials, setCurrentUser, userCredential} from "../helpers/storage"
 
 
 interface LoginProps {
@@ -24,7 +24,7 @@ const Login = (props: LoginProps) => {
     }
 
     const validatePassword = (password: string) => {
-       setIsPasswordValid(password.length > 5);
+       setIsPasswordValid(password.length > 0);
        setPassword(password);
     }
 
@@ -35,7 +35,10 @@ const Login = (props: LoginProps) => {
                 email,
                 password
             };
-            await saveCredentials(user);
+            const result = await loginUserWithCredentials(user);
+            if (!result){
+                return Alert.alert("Error", "Email or password is invalid")
+            }
             await setCurrentUser(user);
             props.handleLogin(true);
             return;
@@ -60,7 +63,7 @@ const Login = (props: LoginProps) => {
             label="Password"
             placeholder="your Password please"
             handleInputChange={validatePassword}
-            isValid={email.length>0? isPasswordValid : undefined}
+            isValid={password.length>0? isPasswordValid : undefined}
             otherProps={{secureTextEntry: true}}
           />
           
@@ -92,6 +95,5 @@ const styles = StyleSheet.create({
       height: "100%",
      justifyContent: "center",
      alignContent: "center",
-     backgroundColor: "yellow"
   }
 });

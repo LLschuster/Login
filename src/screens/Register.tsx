@@ -4,6 +4,7 @@ import {Item, Form, Input, Label, Icon, Button, Text} from "native-base";
 import FormInput from '../components/FormInput';
 import { EMAIL_REGEX } from '../helpers/constants'
 import {saveCredentials, setCurrentUser, userCredential} from "../helpers/storage"
+import { getPasswordStrengthRate } from '../helpers/util';
 
 interface RegisterProps {
     navigation: any,
@@ -15,6 +16,10 @@ const Register = (props: RegisterProps) => {
     const [email, setEmail] = React.useState("");
     const [isPasswordValid, setIsPasswordValid] = React.useState(false);
     const [password, setPassword] = React.useState("");
+    const [isPhoneValid, setIsPhoneValid] = React.useState(false);
+    const [phone, setPhone] = React.useState("");
+    const [firstname, setFirstname] = React.useState("");
+    const [lastname, setLastname] = React.useState("");
 
     const validateEmail = (email: string) => {
        setIsEmailValid(EMAIL_REGEX.test(email.toLowerCase()));
@@ -22,18 +27,31 @@ const Register = (props: RegisterProps) => {
     }
 
     const validatePassword = (password: string) => {
-       setIsPasswordValid(password.length > 5);
+       const passwordStrength = getPasswordStrengthRate(password);
+       console.log({passwordStrength})
+       setIsPasswordValid(passwordStrength > 2);
        setPassword(password);
+    }
+    
+    const validatePhone = (phone: string) => {
+        setIsPhoneValid(phone.length > 6)
+        setPhone(phone);
     }
 
     const handleSubmit = async () => {
         let user = {} as userCredential;
-        if (isEmailValid && isPasswordValid){
+        if (isEmailValid && isPasswordValid && isPhoneValid){
             user = {
                 email,
-                password
+                password,
+                phone,
+                firstname,
+                lastname
             };
-            await saveCredentials(user);
+            const result = await saveCredentials(user);
+            if (!result){
+                return Alert.alert("Error", "Register was unsuccessful, try again")
+            }
             await setCurrentUser(user);
             props.handleLogin(true);
             return;
@@ -58,8 +76,26 @@ const Register = (props: RegisterProps) => {
             label="Password"
             placeholder="your Password please"
             handleInputChange={validatePassword}
-            isValid={email.length>0? isPasswordValid : undefined}
+            isValid={password.length>0? isPasswordValid : undefined}
             otherProps={{secureTextEntry: true}}
+          />
+          <FormInput 
+            label="Phone"
+            placeholder="your Phonenumber please"
+            handleInputChange={validatePhone}
+            isValid={phone.length>0? isPhoneValid : undefined}
+          />
+          <FormInput 
+            label="Firstname"
+            placeholder="your name please"
+            handleInputChange={setFirstname}
+            isValid={firstname.length > 0? true : undefined}
+          />
+          <FormInput 
+            label="Lastname"
+            placeholder="your lastname please"
+            handleInputChange={setLastname}
+            isValid={lastname.length>0? true : undefined}
           />
           
           <Button 
@@ -67,7 +103,7 @@ const Register = (props: RegisterProps) => {
             style={{width: "70%", alignSelf: "center", marginTop: 25, justifyContent: "center"}}
             onPress={handleSubmit}
           >
-              <Text style={{alignSelf: "center"}}>Login</Text>
+              <Text style={{alignSelf: "center"}}>Sign in</Text>
           </Button>
 
           <Button 

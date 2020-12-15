@@ -5,6 +5,9 @@ export interface userInfo{
 }
 
 export interface userCredential{
+    firstname?: string,
+    lastname?: string,
+    phone?: string,
     email: string,
     password: string
 }
@@ -13,6 +16,8 @@ export interface userCredential{
 export const saveCredentials = async (credential: userCredential) =>
 {
     try {
+        const userObject = await asyncstorage.getItem(credential.email);
+        if (userObject) return false;
         await asyncstorage.setItem(credential.email, JSON.stringify(credential))
         return true;
     } catch (error) {
@@ -29,6 +34,7 @@ export const loginUserWithCredentials = async (credential: userCredential) =>
         if (!userObject) return false;
 
         const userdata = JSON.parse(userObject) as userCredential
+        console.log("userdate login ", {userdata, credential})
         if (userdata.password === credential.password)
         {
             return true;

@@ -14,7 +14,9 @@ function App() {
 
   React.useEffect(() => {
     getCurrentUser()
-    .then(() => setLogin(true))
+    .then((user) => {
+        if (user) setLogin(true)
+    })
     .catch(() => setLogin(false))
   }, [])
 
@@ -25,12 +27,18 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {isLogin? <Stack.Screen name="Main" component={(props) => <Main handleLogin={loginCallback} />}/> 
+        {isLogin? <Stack.Screen name="Main">
+            {(props) => <Main handleLogin={loginCallback} {...props}/>}
+        </Stack.Screen> 
         :
         (
         <>
-        <Stack.Screen name="Login" component={(props) => <Login handleLogin={loginCallback} />}/>
-        <Stack.Screen name="Register" component={(props) => <Register handleLogin={loginCallback} />}/>
+        <Stack.Screen name="Login">
+            {(props) => <Login handleLogin={loginCallback} {...props}/>}
+        </Stack.Screen>
+        <Stack.Screen name="Register">
+            {(props) => <Register handleLogin={loginCallback} {...props} />}
+        </Stack.Screen>
         </>
         )}
       </Stack.Navigator>
