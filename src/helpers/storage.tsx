@@ -16,9 +16,9 @@ export interface userCredential{
 export const saveCredentials = async (credential: userCredential) =>
 {
     try {
-        const userObject = await asyncstorage.getItem(credential.email);
+        const userObject = await asyncstorage.getItem(credential.email.toLowerCase());
         if (userObject) return false;
-        await asyncstorage.setItem(credential.email, JSON.stringify(credential))
+        await asyncstorage.setItem(credential.email.toLowerCase(), JSON.stringify(credential))
         return true;
     } catch (error) {
        console.log(error);
@@ -29,7 +29,7 @@ export const saveCredentials = async (credential: userCredential) =>
 export const loginUserWithCredentials = async (credential: userCredential) =>
 {
     try {
-        const userObject = await asyncstorage.getItem(credential.email);
+        const userObject = await asyncstorage.getItem(credential.email.toLowerCase());
 
         if (!userObject) return false;
 
@@ -37,6 +37,7 @@ export const loginUserWithCredentials = async (credential: userCredential) =>
         console.log("userdate login ", {userdata, credential})
         if (userdata.password === credential.password)
         {
+            await setCurrentUser(userdata);
             return true;
         }
         return false

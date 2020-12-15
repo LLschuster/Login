@@ -39,7 +39,6 @@ const Login = (props: LoginProps) => {
             if (!result){
                 return Alert.alert("Error", "Email or password is invalid")
             }
-            await setCurrentUser(user);
             props.handleLogin(true);
             return;
         }
