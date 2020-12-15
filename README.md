@@ -1,5 +1,15 @@
 ## Login
 
+## Installation
+
+- clone the project
+- cd into the project
+- npm i
+- cd ios && pod install
+- open two terminals
+- in one run npm start
+- in the other npm run android or ios (project build on android)
+
 ## TODO
 
 functional
